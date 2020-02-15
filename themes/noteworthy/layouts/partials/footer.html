@@ -1,7 +1,11 @@
 <footer class="footer">
 	{{ partial "social.html" . }}
 
-	<p><a href="https://github.com/kimcc/hugo-theme-noteworthy" target="_blank" rel="noopener">Noteworthy theme</a></p>
+	<p>
+		<a href="https://www.certmetrics.com/amazon/public/badge.aspx?i=2&t=c&d=2019-11-05&ci=AWS01101686">
+		 <img src="https://wbira.github.io/devimage.png" srcset="https://wbira.github.io/devimage.png" width="110px" height="120px"/>
+		</a>
+	</p>
 	<p><a href="https://gohugo.io" target="_blank" rel="noopener">Built with Hugo</a></p>
 
 	{{ $script := resources.Get "js/main.js" | minify | fingerprint -}}

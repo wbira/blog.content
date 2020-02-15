@@ -21,10 +21,18 @@
         text-align: left;
     }
 
+    .nav-pic {
+        display: block;
+        border-radius: 50%;
+        height: 128px;
+        width: 128px
+    }
+
     .nav-menu {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
+        margin-top: 2rem;
     }
 
     .nav-link {
