@@ -9,4 +9,4 @@ tags: [
 type: "post"
 ---
 
-Here is my new super blog. I will try to share my IT knwoladge here.
+Here is my new super blog. I will try to share my IT knowladge here.
