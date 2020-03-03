@@ -1,7 +1,7 @@
 ---
 author: "Waldek Bira"
 title: "Welcome!"
-date: "2020-01-02"
+date: "2020-02-14"
 description: "My first post on this blog"
 tags: [
   "aws"
