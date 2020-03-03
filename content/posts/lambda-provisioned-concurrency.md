@@ -97,6 +97,6 @@ Parameter ```c``` define number of multiple request perform at a time.
 ab -n 1000 -c 10
 ```
 
-You can run this function on two lambdas one with enabled provisioned concurrency, and on with disabled.
+You can run this function on two lambdas one with enabled provisioned concurrency, and the second with disabled provisioned concurrency.
 [On AWS blog](https://aws.amazon.com/blogs/aws/new-provisioned-concurrency-for-lambda-functions/) you could check results of similar experiment.
 Also you could [run example](https://github.com/wbira/reinvent2019launches/tree/master/lambda.provisioned.concurrency) that I created on my github account.
