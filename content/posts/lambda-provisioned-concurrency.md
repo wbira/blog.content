@@ -12,6 +12,12 @@ type: "post"
 
 ### What is Provisioned Concurrency for AWS Lambda?
 
+AWS Lambda as a main building block of serverless world. Overall serverless computing is great for various of use cases, but still have some limitations.
+One of them could be latency. When lambda wasn't used for some time, an execution environment needs to be created, and  it could
+take from 200ms to even 600ms, [depending on choosen language.](https://levelup.gitconnected.com/aws-lambda-cold-start-language-comparisons-2019-edition-%EF%B8%8F-1946d32a0244)
+So when latency is critical for your application, additional 600ms could be painful. So here's Provisioned Concurrency comes to the rescue!
+It creates execution environment just after function deployment, and it keeps function in initialized state, so latency is no longer an issue.
+
 
 ### How to setup provisioned concurrency
 
