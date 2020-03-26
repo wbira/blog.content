@@ -2,7 +2,7 @@
 title: "Lambda provisioned concurrency"
 date: "2020-03-02"
 description: "Lambda provisioned concurrency"
-aws: [
+tags: [
   "aws",
   "lambda",
   "serverless"
