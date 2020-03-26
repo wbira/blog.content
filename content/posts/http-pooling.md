@@ -1,19 +1,26 @@
 ---
-title: "Http Pooling"
+title: "Http Polling"
 date: 2020-03-26T21:17:49+01:00
-description: "Lambda provisioned concurrency"
+description: "How to implement client-side http polling with RxJs"
 tags: [
-  "angular",
+  "RxJs",
   "http",
-  "pooling"
+  "polling",
+  "javascript"
 ]
 type: "post"
 ---
 
-### HTTP polling in RxJs
 
-Hello! Today post will be quick one. I'll show you little utility, that I created for testing HTTP pooled based API.
-Testing such API's via curl or Postman can by really annoying. I had some frontend background, so I thought that RxJS can solve my problem in a few lines, in nice declarative way.
+Hello! Today post will be a quick one. I'll show you small utility, that I created for testing HTTP long-polling based API.
+ <!--more-->
+
+
+
+Testing such APIs via curl or Postman can by really annoying. I have some frontend background, so I thought that RxJs can solve my problem in few lines, in nice declarative way.
+
+
+
 
 ```javascript
 import { catchError, map, pluck, tap, mergeMap, take, delay, filter, scan } from 'rxjs/operators';
