@@ -6,7 +6,8 @@ tags: [
   "aws",
   "cloudwatch",
   "logs",
-  "serverless"
+  "serverless",code
+  "monitoring"
 ]
 type: "post"
 ---
@@ -19,12 +20,65 @@ Amazon Cloudwatch is monitoring service, that can gather logs and metrics form i
 It allows to creates highly customized dashbords, with different types of widgets, that can be based on query logs, resource or custom metrics.
 Additionaly we can setup alarms based on metrics. So with dashboards feature we have single point of view to our application data, that can be spread across different AWS regions, or even multiple accounts. I will show you how to create Cloudwatch dashboard in a console fist, and then how to defined it, as a infrastructure as a code.
 
+### Console setup
+
+So let's start console setup with terminal :)
+
+```bash
+sam init
+```
+
+I created Lambda written in Go with following code:
+
+```golang
+package main
+
+import (
+	"errors"
+	"log"
+	"net/http"
+
+	"github.com/aws/aws-lambda-go/events"
+	"github.com/aws/aws-lambda-go/lambda"
+)
+
+// handlers returns errors to generate logs on dashboard
+func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+	if value, ok := request.QueryStringParameters["error"]; ok {
+		if value == "notfound" {
+			log.Println("Error: not found")
+			return createApiGatewayResponse("Not found\n", http.StatusNotFound)
+		}
+		log.Println("Error: internal server error")
+		return createApiGatewayResponse("Error\n", http.StatusInternalServerError)
+	}
+
+	log.Println("operation successful")
+	return createApiGatewayResponse("Success\n", http.StatusOK)
+}
+
+func createApiGatewayResponse(body string, statusCode int) (events.APIGatewayProxyResponse, error) {
+	var err error
+
+	if statusCode == http.StatusInternalServerError {
+		err = errors.New("internal server error")
+	}
+	return events.APIGatewayProxyResponse{
+		Body:       body,
+		StatusCode: statusCode,
+	}, err
+}
+
+func main() {
+	lambda.Start(handler)
+}
+```
+
+2. Stworzyc empty dashboard
+3. Screen Monitoring z Lambdą
+4. Przenieść widgeta (Invocation, errors vs success)
+5. Dodać errors with logs widget
 
 
-Invocations
-Errors count vs Success Rate
-Logs with errors
-Custom Metric Filters
 
-
-Jak stworzyć cloudformation
+### Moving to SAM template
