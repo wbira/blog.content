@@ -12,7 +12,7 @@ type: "post"
 ---
 
 
-Hello! Today post will be a quick one. I'll show you small utility, that I created for testing HTTP long-polling based API.
+Hello! Today's post will be a quick one. I'll show you small utility, that I created for testing HTTP long-polling based API.
  <!--more-->
 
 
