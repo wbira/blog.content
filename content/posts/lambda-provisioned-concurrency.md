@@ -52,7 +52,7 @@ Number of errors found: 1. Resource with id [HelloWorldFunction] is invalid.
 To set ProvisionedConcurrencyConfig AutoPublishALias must be defined on the function...
 ```
 
-So as we clearly see we need to include an alias to our function config.  Let's add it:
+So as we clearly see we need to include an alias to our function config. Let's add it:
 
 ```yaml
 AutoPublishAlias: live

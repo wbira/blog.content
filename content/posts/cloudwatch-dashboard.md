@@ -28,6 +28,8 @@ So let's start console setup with terminal :)
 sam init
 ```
 
+TODO add deploy commad
+
 I created Lambda written in Go with following code:
 
 ```golang
@@ -74,11 +76,137 @@ func main() {
 }
 ```
 
-2. Stworzyc empty dashboard
-3. Screen Monitoring z Lambdą
-4. Przenieść widgeta (Invocation, errors vs success)
-5. Dodać errors with logs widget
+So let's create empty dashboard in AWS console
 
+![empty dashboard](/posts/monitoring/emptyDashboard.png)
 
+Now it's time to add some widgets to dashboard. We can press Add widget button on dashboard screen, or...
+We can go to monitoring tab of our lambda, pick interesting widgets and then add it to our dashboard by clicking on widgets action's button in top right corner of a widget. Or you could even add all widgets at once **Add to Dashboard** button!
+
+![lambda monitoring tab](/posts/monitoring/lambdaMonitoring.png)
+
+I've added few standard lambda widgets. It's pretty easy, but what if you need to show non standard data (eg. based on logs).
+Let's go through it and add widget showing error logs
+
+In a first step, let's add **log** type widget to dashboard
+
+![add widget to dashboard](/posts/monitoring/addWidgetToDashboard.png)
+
+Then we should modify CloudWatch Logs Insights query, to adjust it to our needs. In our case, we should display only logs, that contain some error.
+I will use following query:
+
+```
+fields @timestamp, @message
+| sort @timestamp desc
+| filter @message like /(?i)error/
+```
+
+And then just press **Create widget**
+
+Here is final results
+
+![final dashboard](/posts/monitoring/dashboard.png)
+
+This simple dashboard was created really qucickly. But let's imagin that you have few microservices and you want to display logs and metric in a single place. It would be painful to move this dashboard to upper environments using presented method. But maybe we could define dashboard following infrastrucure as a code apporach?
 
 ### Moving to SAM template
+
+When we have created dashboard it's really easy to create **Cloudformation/SAM** scripts for it.
+So, let's add to our SAM template following resource:
+
+```yaml
+  MetricsDashboard:
+    Type: AWS::CloudWatch::Dashboard
+    Properties:
+      DashboardName: 'SimpleDashboard'
+			DashboardBody:
+
+```
+
+As you can see the missing part is value of DashboardBody property. To get it you need to go to console and on **Actions** list you need to click view/edit source:
+
+![final dashboard](/posts/monitoring/viewsource.png)
+
+And then simple copy json body of dashboard definition to DashboardBody property
+
+![final dashboard](/posts/monitoring/dashboardJson.png)
+
+I think that you should also replace hardcoded function names with using **!Sub** function with lambda resource in all hardoced places.
+Here's it's final dashboard resource definition:
+
+```yaml
+  MetricsDashboard:
+    Type: AWS::CloudWatch::Dashboard
+    Properties:
+      DashboardName: 'SimpleDashboard'
+      DashboardBody: !Sub |
+        {
+            "widgets": [
+                {
+                    "type": "metric",
+                    "x": 0,
+                    "y": 0,
+                    "width": 8,
+                    "height": 6,
+                    "properties": {
+                        "metrics": [
+                            [ "AWS/Lambda", "Invocations", "FunctionName", "${HelloWorldFunction}", "Resource", "${HelloWorldFunction}", { "stat": "Sum" } ]
+                        ],
+                        "region": "eu-west-1",
+                        "title": "Invocations"
+                    }
+                },
+                {
+                    "type": "metric",
+                    "x": 8,
+                    "y": 0,
+                    "width": 8,
+                    "height": 6,
+                    "properties": {
+                        "metrics": [
+                            [ "AWS/Lambda", "Duration", "FunctionName", "${HelloWorldFunction}", "Resource", "${HelloWorldFunction}", { "stat": "Minimum" } ],
+                            [ "...", { "stat": "Average" } ],
+                            [ "...", { "stat": "Maximum" } ]
+                        ],
+                        "region": "eu-west-1"
+                    }
+                },
+                {
+                    "type": "metric",
+                    "x": 16,
+                    "y": 0,
+                    "width": 8,
+                    "height": 6,
+                    "properties": {
+                        "metrics": [
+                            [ "AWS/Lambda", "Errors", "FunctionName", "${HelloWorldFunction}", "Resource", "${HelloWorldFunction}", { "id": "errors", "stat": "Sum", "color": "#d13212" } ],
+                            [ ".", "Invocations", ".", ".", ".", ".", { "id": "invocations", "stat": "Sum", "visible": false } ],
+                            [ { "expression": "100 - 100 * errors / MAX([errors, invocations])", "label": "Success rate (%)", "id": "availability", "yAxis": "right" } ]
+                        ],
+                        "region": "eu-west-1",
+                        "title": "Error count and success rate (%)",
+                        "yAxis": {
+                            "right": {
+                                "max": 100
+                            }
+                        }
+                    }
+                },
+                {
+                    "type": "log",
+                    "x": 0,
+                    "y": 6,
+                    "width": 24,
+                    "height": 6,
+                    "properties": {
+                        "query": "SOURCE '/aws/lambda/${HelloWorldFunction}' | fields @timestamp, @message\n| sort @timestamp desc\n| filter @message like /(?i)error/",
+                        "region": "eu-west-1",
+                        "stacked": false,
+                        "view": "table"
+                    }
+                }
+            ]
+				}
+```
+
+[Here](https://github.com/wbira/golang-aws-examples/tree/master/cloudwatch-dashboard) you can find this example and play with it :)
