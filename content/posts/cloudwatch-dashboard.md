@@ -131,7 +131,7 @@ And then simple copy json body of dashboard definition to DashboardBody property
 
 ![final dashboard](/posts/monitoring/dashboardJson.png)
 
-I think that you should also replace hardcoded function names with using **!Sub** function with lambda resource in all hardoced places.
+I think that you should also replace hardcoded function names using **!Sub** function with lambda resource in all hardoced places.
 Here's it's final dashboard resource definition:
 
 ```yaml
