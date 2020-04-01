@@ -74,13 +74,13 @@ func main() {
 }
 ```
 
-Let's create Go binary running command form Makefile
+Let's create Go binary running command form Makefile.
 
 ```bash
 make build
 ```
 
-And then simply deploy our example stack to AWS using SAM
+And then simply deploy our example stack to AWS using SAM.
 
 ```bash
 sam deploy \
@@ -91,7 +91,7 @@ sam deploy \
 ```
 
 
-So let's create empty dashboard in AWS console
+So let's create empty dashboard in AWS console.
 
 ![empty dashboard](/posts/monitoring/emptyDashboard.png)
 
