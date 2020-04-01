@@ -28,8 +28,6 @@ So let's start console setup with terminal :)
 sam init
 ```
 
-TODO add deploy commad
-
 I created Lambda written in Go with following code:
 
 ```golang
@@ -75,6 +73,23 @@ func main() {
 	lambda.Start(handler)
 }
 ```
+
+Let's create Go binary running command form Makefile
+
+```bash
+make build
+```
+
+And then simply deploy our example stack to AWS using SAM
+
+```bash
+sam deploy \
+--template-file ./template.yaml \
+--stack-name cloudwatchDashboard \
+--guided \
+--capabilities CAPABILITY_IAM
+```
+
 
 So let's create empty dashboard in AWS console
 
